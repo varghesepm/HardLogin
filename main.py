@@ -2,6 +2,8 @@
 import inquirer
 import subprocess
 
+serverDetails = {}
+
 def main():
 
     subprocess.call('clear',shell=True)
@@ -46,7 +48,7 @@ def add_servers():
         break
     while True:
         try:
-            host_ip = int(input("Please enter your Host IP : "))
+            host_ip = str(input("Please enter your Host IP : "))
         except:
             print("Invalid Host IP")
             continue
@@ -73,13 +75,25 @@ def add_servers():
             print("Invalid Host PubKey")
             continue
         break
-    if host_name && host_ip && host_user && host_passwd && host_pubkey:
-        fun_addToDB()
+    if host_name and host_ip and host_user and host_passwd and host_pubkey:
+        fun_addTodict(name=host_name,ip=host_ip,passwd=host_passwd,pubkey=host_pubkey)
     else:
         print("Something went wrong")
 
-def fun_addToDB():
+def fun_addTodict(**kwargs):
+    name = kwargs['name']
+    ip = kwargs['ip']
+    passwd = kwargs['passwd']
+    pubkey = kwargs['pubkey']
 
+    lengofDict = len(serverDetails)
+    print(lengofDict)
+    if lengofDict == 0:
+        serverDetails[1] = {"host_name" : name, "host_ip":ip, "host_passwd":passwd, "host_pubkey":pubkey}
+        print(serverDetails)
+    else:
+        print(lengofDict)
+        serverDetails[len(serverDetails) + 1] = {"host_name" : name, "host_ip":ip, "host_passwd":passwd, "host_pubkey":pubkey}
 
 if __name__ == '__main__':
     main()
