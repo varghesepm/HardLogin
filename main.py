@@ -1,6 +1,8 @@
 ##### Main function #####
 import inquirer
 import subprocess
+import json
+import os
 
 serverDetails = {}
 
@@ -69,31 +71,52 @@ def add_servers():
         break
     while True:
         try:
+            host_port = str(input("Please enter your Host Port : "))
+        except:
+            print("Invalid Host Port")
+            continue
+        break
+    while True:
+        try:
             host_pubkey = str(input("Please enter your Host PubKey : "))
             # print("successfully addded")
         except:
             print("Invalid Host PubKey")
             continue
         break
-    if host_name and host_ip and host_user and host_passwd and host_pubkey:
-        fun_addTodict(name=host_name,ip=host_ip,passwd=host_passwd,pubkey=host_pubkey)
+    if host_name and host_ip and host_user and host_passwd and host_port and host_pubkey:
+        fun_addTodict(name=host_name,ip=host_ip,user=host_user,passwd=host_passwd,port=host_port,pubkey=host_pubkey)
     else:
         print("Something went wrong")
 
 def fun_addTodict(**kwargs):
-    name = kwargs['name']
-    ip = kwargs['ip']
-    passwd = kwargs['passwd']
-    pubkey = kwargs['pubkey']
+    with open('serverlist.json','r') as json_format:
+        serverDetails = json.load(json_format)
 
+    name = kwargs['name']
+    print(name)
+    ip = kwargs['ip']
+    user = kwargs['user']
+    passwd = kwargs['passwd']
+    port = kwargs['port']
+    pubkey = kwargs['pubkey']
     lengofDict = len(serverDetails)
-    print(lengofDict)
+    #print(lengofDict)
     if lengofDict == 0:
-        serverDetails[1] = {"host_name" : name, "host_ip":ip, "host_passwd":passwd, "host_pubkey":pubkey}
+        serverDetails[1] = {"host_name" : name, "host_ip":ip, "host_user":user, "host_passwd":passwd, "host_port":port, "host_pubkey":pubkey}
         print(serverDetails)
     else:
-        print(lengofDict)
-        serverDetails[len(serverDetails) + 1] = {"host_name" : name, "host_ip":ip, "host_passwd":passwd, "host_pubkey":pubkey}
+        #print(lengofDict)
+        serverDetails[len(serverDetails) + 1] = {"host_name" : name, "host_ip":ip, "host_user":user, "host_passwd":passwd, "host_port":port, "host_pubkey":pubkey}
+    with open('serverlist.json','w') as json_format:
+        json.dump(serverDetails,json_format,indent=2)
+    print("server with hostname :" + name + " added")
+#
+# def createFile():
+#     if os.path.exists('./serverlist.json'):
+#         pass
+#     else:
+#         subprocess.call('touch serverlist.json',shell=True)
 
 if __name__ == '__main__':
     main()
